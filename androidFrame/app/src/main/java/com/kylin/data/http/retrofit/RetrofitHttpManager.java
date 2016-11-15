@@ -1,16 +1,16 @@
-package com.kylin.data.http;
+package com.kylin.data.http.retrofit;
 
+
+import com.kylin.data.entity.RequestEntity.BaseRequestEntity;
+import com.kylin.data.entity.RequestEntity.GetCameraListRequestEntity;
+import com.kylin.data.entity.RequestEntity.LoginRequestEntity;
+import com.kylin.data.entity.ResponseEntity.GetCameraListResponseEntity;
+import com.kylin.data.entity.ResponseEntity.LoginResponseEntity;
+import com.kylin.data.http.IHttpManager;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import test.test.retrofit.HttpInterfaceService;
-import test.test.retrofit.RequestEntity.BaseRequestEntity;
-import test.test.retrofit.RequestEntity.GetCameraListRequestEntity;
-import test.test.retrofit.RequestEntity.LoginRequestEntity;
-import test.test.retrofit.ResponseEntity.GetCameraListResponseEntity;
-import test.test.retrofit.ResponseEntity.LoginResponseEntity;
-import test.test.retrofit.RetrofitService;
 
 /**
  * Created by gaozhongkui on_normal 2016/3/15.
@@ -53,6 +53,11 @@ public final class RetrofitHttpManager implements IHttpManager {
 
     @Override
     public <T extends BaseRequestEntity> String getCameraList(T requestEntity) {
+        return null;
+    }
+
+    @Override
+    public <T extends BaseRequestEntity> String getUserInfo(T requestEntity) {
         return null;
     }
 }

@@ -2,7 +2,10 @@ package com.kylin.data.http.HttpURLConnection;
 
 import android.net.Uri;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.Log;
+
+import com.kylin.data.DataManager;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -29,16 +32,25 @@ import javax.net.ssl.X509TrustManager;
  */
 
 public class HttpHelper {
+    /**
+     * 网络请求重试次数
+     */
+    private static int REPEATS_TIME = 3;
+    private String TAG = getClass().getSimpleName();
     protected static final String ALLOWED_URI_CHARS = "@#&=*+-_.,:!?()/~'%";
     protected static final String CHARSET = "UTF-8";
-    /** 建立连接的超时时间 */
-    protected static final int connectTimeout = 5 * 1000;
-    /** 建立到资源的连接后从 input 流读入时的超时时间 */
-    protected static final int readTimeout = 10 * 1000;
+    /**
+     * 建立连接的超时时间
+     */
+    private static int connectTimeout = 5 * 1000;
+    /**
+     * 建立到资源的连接后从 input 流读入时的超时时间
+     */
+    private static int readTimeout = 10 * 1000;
 
     private static HttpHelper instance;
 
-    private TrustManager[] trustAllCerts = { new X509TrustManager() {
+    private TrustManager[] trustAllCerts = {new X509TrustManager() {
 
         public X509Certificate[] getAcceptedIssuers() {
             return null;
@@ -51,7 +63,8 @@ public class HttpHelper {
         public void checkServerTrusted(X509Certificate[] certs, String authType) {
 
         }
-    } };
+    }};
+
 
     public static HttpHelper getInstance() {
         if (instance == null) {
@@ -131,66 +144,90 @@ public class HttpHelper {
         return result;
     }
 
-    public String postString(String url, String params) {
+    public String postString(String url, String body) {
+        Log.e(TAG, "url  " + url);
         String result = null;
         OutputStream os = null;
         InputStream is = null;
         BufferedReader br = null;
-        try {
-            HttpURLConnection conn = createConnection(url);
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            conn.setUseCaches(false);// POST方式不能缓存数据
-            // conn.setRequestProperty(field, newValue);//header
+        int count = 0;
 
-            conn.setRequestProperty("Content-Type", "application/json; charset=" + CHARSET);
-
-            // // 设置请求的头
-            // conn.setRequestProperty("Connection", "keep-alive");
-            // // 设置请求的头
-            // conn.setRequestProperty("User-Agent",
-            // "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0");
-
-            if (params != null) {
-                os = conn.getOutputStream();
-                DataOutputStream dos = new DataOutputStream(os);
-                dos.write(params.getBytes(CHARSET));
-                dos.flush();
-                dos.close();
-            }
-
-            is = conn.getInputStream();
-            br = new BufferedReader(new InputStreamReader(is, CHARSET));
-            String line = null;
-            StringBuffer sb = new StringBuffer();
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-            result = sb.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
+        String encodedUrl = Uri.encode(url, ALLOWED_URI_CHARS);
+        while (count < REPEATS_TIME) {
+            HttpURLConnection conn = null;
             try {
-                if (os != null) {
-                    os.close();
+                conn = (HttpURLConnection) new URL(encodedUrl).openConnection();
+                conn.setConnectTimeout(connectTimeout);
+                conn.setReadTimeout(readTimeout);
+
+                conn.setRequestMethod("POST");
+
+                // 设置是否向httpUrlConnection输出，因为这个是post请求，参数要放在
+                // http正文内，因此需要设为true, 默认情况下是false;
+                conn.setDoOutput(true);
+                // 设置是否从httpUrlConnection读入，默认情况下是true;
+                conn.setDoInput(true);
+                // Post 请求不能使用缓存
+                conn.setUseCaches(false);// POST方式不能缓存数据
+
+                // conn.setRequestProperty(field, newValue);//header
+                //设置请求头
+                conn.setRequestProperty("Content-Type", "application/json; charset=" + CHARSET);
+                // // 设置请求的头
+                // conn.setRequestProperty("Connection", "keep-alive");
+                // // 设置请求的头
+                // conn.setRequestProperty("User-Agent",
+                // "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0");
+
+                String cookie = DataManager.getInstance().getCookie();
+                if (!TextUtils.isEmpty(cookie)) {
+                    Log.e(TAG, "Cookie  " + cookie);
+                    conn.setRequestProperty("Cookie", "JSESSIONID=" + cookie);
                 }
-            } catch (IOException e) {
-            }
-            try {
-                if (br != null) {
-                    br.close();
+
+                //添加 body
+                if (null != body) {
+                    os = conn.getOutputStream();
+                    DataOutputStream dos = new DataOutputStream(os);
+                    dos.write(body.getBytes(CHARSET));
+                    dos.flush();
+                    dos.close();
                 }
-            } catch (IOException e) {
-            }
-            try {
-                if (is != null) {
-                    is.close();
+
+                is = conn.getInputStream();
+                br = new BufferedReader(new InputStreamReader(is, CHARSET));
+                String line = null;
+                StringBuffer sb = new StringBuffer();
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
                 }
+                result = sb.toString();
+                count = REPEATS_TIME;
             } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(TAG, "IOException  " + e.toString());
+            } finally {
+                count++;
+
+                try {
+                    if (os != null) os.close();
+                } catch (IOException e) {
+                }
+
+                try {
+                    if (br != null) br.close();
+                } catch (IOException e) {
+                }
+
+                try {
+                    if (is != null) is.close();
+                } catch (IOException e) {
+                }
+
             }
+
         }
-
+        Log.e(TAG, "url  " + url + " result  " + result);
         return result;
     }
 
@@ -215,6 +252,23 @@ public class HttpHelper {
             Log.i("RestUtilImpl", "Approving certificate for " + hostname);
             return true;
         }
+    }
+
+
+    public static void setReadTimeout(int readTimeout) {
+        HttpHelper.readTimeout = readTimeout;
+    }
+
+    public static void setConnectTimeout(int connectTimeout) {
+        HttpHelper.connectTimeout = connectTimeout;
+    }
+
+    /**
+     * 网络请求重试次数 默认3次
+     * @param repeatsTime
+     */
+    public static void setRepeatsTime(int repeatsTime) {
+        REPEATS_TIME = repeatsTime;
     }
 }
 

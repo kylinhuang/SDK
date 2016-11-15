@@ -1,4 +1,4 @@
-package com.kylin.data;
+package com.kylin.data.parser;
 
 
 import com.kylin.data.entity.ResponseEntity.BaseResponseEntity;
@@ -8,7 +8,7 @@ import com.kylin.data.entity.ResponseEntity.BaseResponseEntity;
  * 解析
  */
 
-public interface IResolveManager {
+public interface IParserManager {
 
     /**
      * json 解析  成实体 BaseResponseEntity
@@ -17,7 +17,7 @@ public interface IResolveManager {
      * @param ClaZZ
      * @return
      */
-    <T extends BaseResponseEntity> T resolveJson(Class ClaZZ , String msg);
+    <T extends BaseResponseEntity> T parserJson(Class<T> ClaZZ , String msg);
 
     /**
      * XML 解析  成实体 BaseResponseEntity
@@ -26,5 +26,5 @@ public interface IResolveManager {
      * @param ClaZZ
      * @return
      */
-    <T extends BaseResponseEntity> String resolveXML(Class ClaZZ ,String msg);
+    <T extends BaseResponseEntity> String parserXML(Class<T> ClaZZ ,String msg);
 }

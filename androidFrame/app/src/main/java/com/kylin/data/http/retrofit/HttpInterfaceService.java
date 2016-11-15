@@ -1,13 +1,14 @@
 package com.kylin.data.http.retrofit;
 
 
+import com.kylin.data.entity.RequestEntity.GetCameraListRequestEntity;
+import com.kylin.data.entity.RequestEntity.LoginRequestEntity;
+import com.kylin.data.entity.ResponseEntity.GetCameraListResponseEntity;
+import com.kylin.data.entity.ResponseEntity.LoginResponseEntity;
+
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 import rx.Observable;
-import test.test.retrofit.RequestEntity.GetCameraListRequestEntity;
-import test.test.retrofit.RequestEntity.LoginRequestEntity;
-import test.test.retrofit.ResponseEntity.GetCameraListResponseEntity;
-import test.test.retrofit.ResponseEntity.LoginResponseEntity;
 
 /**
  * Created by gaozhongkui on_normal 2016/3/15.

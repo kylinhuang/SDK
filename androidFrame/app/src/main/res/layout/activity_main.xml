@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.kylin.data.UI.MainActivity">
-
+    android:orientation="vertical"
+    >
 
     <Button
         android:id="@+id/bt_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="login"/>
+
+
+    <Button
+        android:id="@+id/bt_getUserInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="bt_getUserInfo"/>
 
     <Button
         android:id="@+id/bt_getCameraList"
@@ -20,8 +26,8 @@
         android:text="getCameraList"/>
 
     <TextView
-        android:id="@+id/substance"
+        android:id="@+id/tv_response"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
-</RelativeLayout>
+</LinearLayout>

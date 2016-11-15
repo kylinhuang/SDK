@@ -12,19 +12,34 @@ public class CustomHttpURLConnection implements IHttpManager {
     private final HttpHelper mHttpHelper;
 
     public CustomHttpURLConnection() {
-       mHttpHelper = HttpHelper.getInstance();
+        mHttpHelper = HttpHelper.getInstance();
+        mHttpHelper.setReadTimeout(readTimeout);
+        mHttpHelper.setConnectTimeout(connectTimeout);
+        mHttpHelper.setRepeatsTime(REPEATS_TIME);
     }
 
     @Override
     public <T extends BaseRequestEntity> String login(T requestEntity) {
-        if (requestEntity instanceof BaseRequestEntity){
-
+        if (requestEntity instanceof BaseRequestEntity) {
+            BaseRequestEntity baseRequestEntity = (BaseRequestEntity) requestEntity;
+            String responseMessage = mHttpHelper.postString(baseRequestEntity.getRequestURL(), baseRequestEntity.getBody());
+            return responseMessage;
         }
         return null;
     }
 
     @Override
     public <T extends BaseRequestEntity> String getCameraList(T requestEntity) {
+        return null;
+    }
+
+    @Override
+    public <T extends BaseRequestEntity> String getUserInfo(T requestEntity) {
+        if (requestEntity instanceof BaseRequestEntity) {
+            BaseRequestEntity baseRequestEntity = (BaseRequestEntity) requestEntity;
+            String responseMessage = mHttpHelper.postString(baseRequestEntity.getRequestURL(), baseRequestEntity.getBody());
+            return responseMessage;
+        }
         return null;
     }
 }

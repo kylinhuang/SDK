@@ -1,7 +1,8 @@
-package com.kylin.data.http;
+package com.kylin.data.http.okhttp;
 
 
 import com.kylin.data.entity.RequestEntity.BaseRequestEntity;
+import com.kylin.data.http.IHttpManager;
 
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -40,6 +41,11 @@ public class OKHttpManager implements IHttpManager {
 
     @Override
     public <T extends BaseRequestEntity> String getCameraList(T requestEntity) {
+        return null;
+    }
+
+    @Override
+    public <T extends BaseRequestEntity> String getUserInfo(T requestEntity) {
         return null;
     }
 }

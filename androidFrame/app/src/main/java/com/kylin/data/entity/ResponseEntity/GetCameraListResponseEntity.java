@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-import test.test.Utils.HttpRequestCode;
 
 /**
  * Created by gaozhongkui on_normal 2016/3/16.
@@ -44,7 +43,7 @@ public class GetCameraListResponseEntity extends BaseResponseEntity {
 
 
     public boolean isRequestSuccess() {
-        if (messageCode == HttpRequestCode.OK) return true;
+//        if (messageCode == HttpRequestCode.OK) return true;
         return false;
     }
 

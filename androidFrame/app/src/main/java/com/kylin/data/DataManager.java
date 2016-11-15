@@ -1,12 +1,20 @@
 package com.kylin.data;
 
+import android.text.TextUtils;
+
+import com.kylin.MyApplication;
+import com.kylin.Utils.PreferencesUtils;
 import com.kylin.data.db.IDBManager;
 import com.kylin.data.entity.RequestEntity.GetCameraListRequestEntity;
+import com.kylin.data.entity.RequestEntity.GetUserInfoRequestEntity;
 import com.kylin.data.entity.RequestEntity.LoginRequestEntity;
 import com.kylin.data.entity.ResponseEntity.GetCameraListResponseEntity;
+import com.kylin.data.entity.ResponseEntity.GetUserInfoResponseEntity;
 import com.kylin.data.entity.ResponseEntity.LoginResponseEntity;
 import com.kylin.data.http.IHttpManager;
-import com.kylin.data.http.OKHttpManager;
+import com.kylin.data.http.okhttp.OKHttpManager;
+import com.kylin.data.parser.gson.GsonParser;
+import com.kylin.data.parser.IParserManager;
 
 
 /**
@@ -20,6 +28,8 @@ import com.kylin.data.http.OKHttpManager;
 
 public class DataManager {
 
+    private String host = "";
+
     private static DataManager mInstance;
     /**
      * http 请求
@@ -28,13 +38,17 @@ public class DataManager {
     /**
      * 解析  --- 将数据解析成实体
      */
-    private IResolveManager mResolveManager;
+    private IParserManager mResolveManager = new GsonParser();
     /**
      * 数据库操作  ---
      */
     private IDBManager mDBManager;
+    private String cookie;
+    private String COOKIE = "cookie";
 
-    public DataManager() { }
+    public DataManager() {
+        host = "https://jx1.snap.test.cloud.sengled.com:9000";
+    }
 
     public static DataManager getInstance() {
         if (mInstance == null) mInstance = new DataManager();
@@ -52,7 +66,7 @@ public class DataManager {
         this.mHttpManager = mHttpManager;
     }
 
-    public void setHttpStrategy(IResolveManager mResolveManager) {
+    public void setHttpStrategy(IParserManager mResolveManager) {
         this.mResolveManager = mResolveManager;
     }
 
@@ -60,16 +74,57 @@ public class DataManager {
         this.mDBManager = mDBManager;
     }
 
-    public void login(LoginRequestEntity entity) {
-        String responseMsg = mHttpManager.login(entity);
-        LoginResponseEntity resolveEntity =  mResolveManager.resolveJson(LoginResponseEntity.class, responseMsg);
+    public LoginResponseEntity login(LoginRequestEntity entity) {
+        String responseMsg = mHttpManager.login(entity);  //网络请求
+        LoginResponseEntity resolveEntity = mResolveManager.parserJson(LoginResponseEntity.class, responseMsg);
+
+        if (null != resolveEntity) setCookie(resolveEntity.getJsessionid());
+        return resolveEntity;
     }
 
 
-    public void getCameraList(GetCameraListRequestEntity entity) {
+    public GetCameraListResponseEntity getCameraList(GetCameraListRequestEntity entity) {
         String responseMsg = mHttpManager.getCameraList(entity);
-        LoginResponseEntity resolveEntity =  mResolveManager.resolveJson(GetCameraListResponseEntity.class, responseMsg);
+        GetCameraListResponseEntity resolveEntity = mResolveManager.parserJson(GetCameraListResponseEntity.class, responseMsg);
+        return resolveEntity;
+    }
+
+    public GetUserInfoResponseEntity GetUserInfo(GetUserInfoRequestEntity entity) {
+        String responseMsg = mHttpManager.getUserInfo(entity);
+        GetUserInfoResponseEntity resolveEntity = mResolveManager.parserJson(GetUserInfoResponseEntity.class, responseMsg);
+        return resolveEntity;
     }
 
 
+    /**
+     * 获取网络请求 host
+     *
+     * @return
+     */
+    public String getHost() {
+        return host;
+    }
+
+    /**
+     * 设置 获取网络请求 host
+     *
+     * @param host
+     */
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getCookie() {
+        if (TextUtils.isEmpty(cookie)) {
+            cookie = PreferencesUtils.getString(MyApplication.getApplication().getApplicationContext(), COOKIE, "");
+        }
+        return cookie;
+    }
+
+    public void setCookie(String cookie) {
+        if (!TextUtils.isEmpty(cookie)) {
+            PreferencesUtils.putString(MyApplication.getApplication(), COOKIE, cookie);
+            this.cookie = cookie;
+        }
+    }
 }

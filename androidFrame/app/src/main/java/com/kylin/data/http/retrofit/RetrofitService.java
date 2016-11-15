@@ -4,7 +4,6 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.security.cert.CertificateException;
@@ -17,7 +16,6 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -29,8 +27,6 @@ import okio.BufferedSource;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import test.test.MyApplication;
-import test.test.retrofit.ResponseEntity.BaseResponseEntity;
 
 /**
  * Created by gaozhongkui on_normal 2016/3/15.
@@ -53,9 +49,9 @@ public class RetrofitService {
 //        if (mUserCenterManager == null) {
 //            mUserCenterManager = UserCenterManager.getInstance();
 //        }
-        if (!TextUtils.isEmpty(MyApplication.getApplication().getJsessionid())) {
-            return (HEADER_PREFIX + MyApplication.getApplication().getJsessionid());
-        }
+//        if (!TextUtils.isEmpty(MyApplication.getApplication().getJsessionid())) {
+//            return (HEADER_PREFIX + MyApplication.getApplication().getJsessionid());
+//        }
         return "";
     }
 
@@ -102,9 +98,9 @@ public class RetrofitService {
 //                mLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 //                okHttpClient.addInterceptor(mLoggingInterceptor);
 //            }
-            File cacheFile = new File(MyApplication.getApplication().getApplicationContext().getCacheDir(), "datacache");
-            Cache cache = new Cache(cacheFile, 1024 * 1024 * 20);
-            okHttpClient.cache(cache);
+//            File cacheFile = new File(MyApplication.getApplication().getApplicationContext().getCacheDir(), "datacache");
+//            Cache cache = new Cache(cacheFile, 1024 * 1024 * 20);
+//            okHttpClient.cache(cache);
             final SSLContext sslContext = SSLContext.getInstance("SSL");
             sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
             final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
@@ -132,7 +128,7 @@ public class RetrofitService {
         public Response intercept(Chain chain) {
             Request request = chain.request();
             Response originalResponse = null;
-            BaseResponseEntity bean = null;
+//            BaseResponseEntity bean = null;
             try {
                 originalResponse = chain.proceed(request);
                 ResponseBody responseBody = originalResponse.body();
@@ -146,7 +142,7 @@ public class RetrofitService {
                 }
                 String bodyString = buffer.clone().readString(charset);
                 Gson gson = new Gson();
-                bean = gson.fromJson(bodyString, BaseResponseEntity.class);
+//                bean = gson.fromJson(bodyString, BaseResponseEntity.class);
             } catch (IOException e) {
                 e.printStackTrace();
             }

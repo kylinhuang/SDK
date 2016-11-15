@@ -22,4 +22,14 @@ public class GetCameraListRequestEntity extends BaseRequestEntity {
     public void setPlayWithSSL(int playWithSSL) {
         this.playWithSSL = playWithSSL;
     }
+
+    @Override
+    public String getBody() {
+        return null;
+    }
+
+    @Override
+    public String getUrl() {
+        return "";
+    }
 }

@@ -1,23 +1,9 @@
 package com.kylin.data.entity.ResponseEntity;
 
-import test.test.Utils.HttpRequestCode;
-
 /**
  * Created by gaozhongkui on_normal 2016/3/16.
  */
 public class LoginResponseEntity extends BaseResponseEntity {
-//    {
-//        "messageCode": "200",
-//            "info": "OK",
-//            "description": "正常",
-//            "jsessionid": "1178C5633B3506623FFD979A630E3435",
-//            "nick_name": "alabei看看",
-//            "profile_path": null,
-//            "appServerAddr": null,
-//            "ucenterAddr": null,
-//            "snapServiceMinVerison": 0,
-//            "ifCheckSessionid": 0
-//    }
 
     private int messageCode;
     private String info;
@@ -111,7 +97,23 @@ public class LoginResponseEntity extends BaseResponseEntity {
     }
 
     public boolean isRequestSuccess() {
-        if (messageCode == HttpRequestCode.OK) return true;
+//        if (messageCode == HttpRequestCode.OK) return true;
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "LoginResponseEntity{" +
+                "messageCode=" + messageCode +
+                ", info='" + info + '\'' +
+                ", description='" + description + '\'' +
+                ", jsessionid='" + jsessionid + '\'' +
+                ", nick_name='" + nick_name + '\'' +
+                ", profile_path='" + profile_path + '\'' +
+                ", appServerAddr='" + appServerAddr + '\'' +
+                ", ucenterAddr='" + ucenterAddr + '\'' +
+                ", snapServiceMinVerison='" + snapServiceMinVerison + '\'' +
+                ", ifCheckSessionid='" + ifCheckSessionid + '\'' +
+                '}';
     }
 }
