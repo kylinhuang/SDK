@@ -36,4 +36,6 @@ public interface IHttpManager {
 
 
     <T extends BaseRequestEntity> String getUserInfo(T requestEntity);
+
+    void setCookie(String Url ,String cookie);
 }

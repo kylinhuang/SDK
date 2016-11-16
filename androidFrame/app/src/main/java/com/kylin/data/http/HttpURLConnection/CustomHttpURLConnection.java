@@ -42,4 +42,9 @@ public class CustomHttpURLConnection implements IHttpManager {
         }
         return null;
     }
+
+    @Override
+    public void setCookie(String Url, String cookie) {
+
+    }
 }

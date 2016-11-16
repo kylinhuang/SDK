@@ -1,6 +1,7 @@
 package com.kylin.data;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.kylin.MyApplication;
 import com.kylin.Utils.PreferencesUtils;
@@ -13,8 +14,8 @@ import com.kylin.data.entity.ResponseEntity.GetUserInfoResponseEntity;
 import com.kylin.data.entity.ResponseEntity.LoginResponseEntity;
 import com.kylin.data.http.IHttpManager;
 import com.kylin.data.http.okhttp.OKHttpManager;
-import com.kylin.data.parser.gson.GsonParser;
 import com.kylin.data.parser.IParserManager;
+import com.kylin.data.parser.gson.GsonParser;
 
 
 /**
@@ -27,9 +28,8 @@ import com.kylin.data.parser.IParserManager;
  */
 
 public class DataManager {
-
+    private  final String TAG = getClass().getSimpleName() ;
     private String host = "";
-
     private static DataManager mInstance;
     /**
      * http 请求
@@ -43,11 +43,12 @@ public class DataManager {
      * 数据库操作  ---
      */
     private IDBManager mDBManager;
-    private String cookie;
+    private String cookie = "";
     private String COOKIE = "cookie";
 
     public DataManager() {
         host = "https://jx1.snap.test.cloud.sengled.com:9000";
+//        host = "http://jx1.snap.test.cloud.sengled.com:8000";
     }
 
     public static DataManager getInstance() {
@@ -76,21 +77,27 @@ public class DataManager {
 
     public LoginResponseEntity login(LoginRequestEntity entity) {
         String responseMsg = mHttpManager.login(entity);  //网络请求
+        Log.e(TAG,"responseMsg " + responseMsg);
         LoginResponseEntity resolveEntity = mResolveManager.parserJson(LoginResponseEntity.class, responseMsg);
 
-        if (null != resolveEntity) setCookie(resolveEntity.getJsessionid());
+        if (null != resolveEntity) {
+            mHttpManager.setCookie(entity.getRequestURL(),resolveEntity.getJsessionid());
+            setCookie(resolveEntity.getJsessionid());
+        }
         return resolveEntity;
     }
 
 
     public GetCameraListResponseEntity getCameraList(GetCameraListRequestEntity entity) {
         String responseMsg = mHttpManager.getCameraList(entity);
+        Log.e(TAG,"responseMsg " + responseMsg);
         GetCameraListResponseEntity resolveEntity = mResolveManager.parserJson(GetCameraListResponseEntity.class, responseMsg);
         return resolveEntity;
     }
 
     public GetUserInfoResponseEntity GetUserInfo(GetUserInfoRequestEntity entity) {
         String responseMsg = mHttpManager.getUserInfo(entity);
+        Log.e(TAG,"responseMsg " + responseMsg);
         GetUserInfoResponseEntity resolveEntity = mResolveManager.parserJson(GetUserInfoResponseEntity.class, responseMsg);
         return resolveEntity;
     }

@@ -21,19 +21,9 @@ public final class RetrofitHttpManager implements IHttpManager {
     private static RetrofitHttpManager mInstance;
     private HttpInterfaceService mHttpInterfaceService;
 
-    public static RetrofitHttpManager getInstance() {
-        if (mInstance == null ) {
-            synchronized (RetrofitHttpManager.class) {
-                mInstance = new RetrofitHttpManager();
-            }
-        }
-        return mInstance;
-    }
-
-    private RetrofitHttpManager() {
+    public RetrofitHttpManager() {
         mHttpInterfaceService = RetrofitService.createHttpService(HttpInterfaceService.class, BASE_URL_PATH);
     }
-
 
     public Observable<LoginResponseEntity> login(LoginRequestEntity loginBean) {
         Observable<LoginResponseEntity> mRespLogin = mHttpInterfaceService.login(loginBean);
@@ -59,5 +49,10 @@ public final class RetrofitHttpManager implements IHttpManager {
     @Override
     public <T extends BaseRequestEntity> String getUserInfo(T requestEntity) {
         return null;
+    }
+
+    @Override
+    public void setCookie(String Url, String cookie) {
+
     }
 }

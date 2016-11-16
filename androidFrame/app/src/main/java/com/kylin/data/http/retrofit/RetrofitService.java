@@ -3,6 +3,7 @@ package com.kylin.data.http.retrofit;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.kylin.data.DataManager;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -49,9 +50,10 @@ public class RetrofitService {
 //        if (mUserCenterManager == null) {
 //            mUserCenterManager = UserCenterManager.getInstance();
 //        }
-//        if (!TextUtils.isEmpty(MyApplication.getApplication().getJsessionid())) {
-//            return (HEADER_PREFIX + MyApplication.getApplication().getJsessionid());
-//        }
+        String cookie = DataManager.getInstance().getCookie();
+        if (!TextUtils.isEmpty(cookie)) {
+            return (HEADER_PREFIX + cookie);
+        }
         return "";
     }
 

@@ -13,7 +13,7 @@ import com.kylin.data.entity.RequestEntity.LoginRequestEntity;
 import com.kylin.data.entity.ResponseEntity.GetCameraListResponseEntity;
 import com.kylin.data.entity.ResponseEntity.GetUserInfoResponseEntity;
 import com.kylin.data.entity.ResponseEntity.LoginResponseEntity;
-import com.kylin.data.http.HttpURLConnection.CustomHttpURLConnection;
+import com.kylin.data.http.retrofit.RetrofitHttpManager;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -38,7 +38,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvResponse = (TextView)findViewById(R.id.tv_response);
 
         mDataManager = DataManager.getInstance();
-        mDataManager.setHttpStrategy(new CustomHttpURLConnection());
+//        mDataManager.setHttpStrategy(new CustomHttpURLConnection());
+        mDataManager.setHttpStrategy(new RetrofitHttpManager());
 
     }
 

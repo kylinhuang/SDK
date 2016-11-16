@@ -23,7 +23,8 @@
         android:id="@+id/bt_getCameraList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="getCameraList"/>
+        android:text="getCameraList"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/tv_response"
