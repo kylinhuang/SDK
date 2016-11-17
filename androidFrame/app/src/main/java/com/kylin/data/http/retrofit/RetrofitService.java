@@ -23,6 +23,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import okhttp3.logging.HttpLoggingInterceptor;
 import okio.Buffer;
 import okio.BufferedSource;
 import retrofit2.Retrofit;
@@ -96,9 +97,9 @@ public class RetrofitService {
             okHttpClient.connectTimeout(TIME_OUT, TimeUnit.SECONDS);//设置连接超时时间
 //            okHttpClient.retryOnConnectionFailure(false);
 //            if (BuildConfig.DEBUG) {
-//                HttpLoggingInterceptor mLoggingInterceptor = new HttpLoggingInterceptor();
-//                mLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-//                okHttpClient.addInterceptor(mLoggingInterceptor);
+                HttpLoggingInterceptor mLoggingInterceptor = new HttpLoggingInterceptor();
+                mLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+                okHttpClient.addInterceptor(mLoggingInterceptor);
 //            }
 //            File cacheFile = new File(MyApplication.getApplication().getApplicationContext().getCacheDir(), "datacache");
 //            Cache cache = new Cache(cacheFile, 1024 * 1024 * 20);
@@ -130,6 +131,12 @@ public class RetrofitService {
         public Response intercept(Chain chain) {
             Request request = chain.request();
             Response originalResponse = null;
+
+            //拦截器，在其中添加header
+//            Request.Builder builder = chain.request().newBuilder();
+//            Request requst = builder.addHeader("Content-type", "application/json").build();
+//            return chain.proceed(requst);
+
 //            BaseResponseEntity bean = null;
             try {
                 originalResponse = chain.proceed(request);
@@ -168,4 +175,5 @@ public class RetrofitService {
             return originalResponse;
         }
     }
+
 }

@@ -27,6 +27,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.0.0'
     testCompile 'junit:junit:4.12'
 
+    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     //Retrofit 网络请求框架
     //    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'//Retrofit2所需要的包
