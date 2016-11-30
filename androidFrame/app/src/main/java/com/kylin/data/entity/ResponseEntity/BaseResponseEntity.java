@@ -7,4 +7,7 @@ import java.io.Serializable;
  */
 
 public class BaseResponseEntity implements Serializable {
+    public boolean isSuccess() {
+        return false;
+    }
 }

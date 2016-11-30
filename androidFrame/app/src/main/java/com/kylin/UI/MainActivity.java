@@ -10,6 +10,7 @@ import com.kylin.data.R;
 import com.kylin.data.entity.RequestEntity.GetCameraListRequestEntity;
 import com.kylin.data.entity.RequestEntity.GetUserInfoRequestEntity;
 import com.kylin.data.entity.RequestEntity.LoginRequestEntity;
+import com.kylin.data.entity.ResponseEntity.BaseResponseEntity;
 import com.kylin.data.entity.ResponseEntity.GetCameraListResponseEntity;
 import com.kylin.data.entity.ResponseEntity.GetUserInfoResponseEntity;
 import com.kylin.data.entity.ResponseEntity.LoginResponseEntity;
@@ -47,6 +48,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.bt_login:
+
+
+                Observable.create(new Observable.OnSubscribe<LoginResponseEntity>() {
+                    @Override
+                    public void call(Subscriber<? super LoginResponseEntity> subscriber) {
+                        LoginRequestEntity requestEntity = new LoginRequestEntity();
+                        LoginResponseEntity responseEntity = DataManager.getInstance().login(requestEntity);
+                        subscriber.onNext(responseEntity);
+                    }
+                }).subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new UIObserver<LoginResponseEntity>(new UIGetDataCallBack() {
+                            @Override
+                            public void getDataFinish(boolean isSuccess, BaseResponseEntity baseResponseEntity) {
+
+                            }
+                        }));
+
+
+
                 Observable.create(new Observable.OnSubscribe<LoginResponseEntity>() {
                     @Override
                     public void call(Subscriber<? super LoginResponseEntity> subscriber) {

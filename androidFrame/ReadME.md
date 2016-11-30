@@ -6,7 +6,7 @@
 
   * 1 CustomHttpURLConnection - android 系统原生HttpURLConnection（HttpClient 6.0废弃）
   * 2 OKHttpManager  - OkHttp
-  * 1 CustomHttpURLConnection
+  * 1 Retrofit
 
 2 解析策略
 
