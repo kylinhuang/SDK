@@ -1,6 +1,7 @@
 package cn.kylinhuang.play.view;
 
 import android.app.Activity;
+import android.content.Context;
 import android.util.DisplayMetrics;
 
 /**
@@ -26,4 +27,17 @@ public class Utils {
         }
         return 0;
     }
+
+
+    /** dip转换px */
+    public static int dip2px(Context context , int dip) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dip * scale + 0.5f);
+    }
+
+    /** 获取dimen值 */
+    public static int getDimens(Context context  ,int resId) {
+        return context.getResources().getDimensionPixelSize(resId);
+    }
+
 }

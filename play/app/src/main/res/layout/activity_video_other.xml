@@ -33,7 +33,7 @@
     <cn.kylinhuang.play.view.MediaController
         android:id="@+id/play_layout"
         android:layout_width="fill_parent"
-        android:layout_height="300dp"
+        android:layout_height="@dimen/playH"
         android:layout_centerVertical="true"
         />
 
