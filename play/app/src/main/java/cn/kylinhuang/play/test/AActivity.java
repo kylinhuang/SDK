@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import cn.kylinhuang.play.R;
 import cn.kylinhuang.play.VideoPlayManager;
@@ -39,8 +40,8 @@ public class AActivity extends Activity implements OnClickListener {
 	private int mScaleX = 0; // scale the width size
 	private int mScaleY = 0; // scale the height size
 
-	String mVideoUrl ="rtsps://101.68.222.221:1554/27B529C1DDBE30E984991CE96472BA99.sdp";
-//	rtsps://101.68.222.221:1554/D438197D40E7B7E121B1306D98A75FFC.sdp
+	String mVideoUrl ="rtsps://101.68.222.220:1554/27B529C1DDBE30E984991CE96472BA99.sdp";
+//	rtsps://101.68.222.221:1554/7136C7D76F5EE09DD1DA564D02EA56F9.sdp
 //
 //	playUrl":"rtsps://101.68.222.221:1554/27B529C1DDBE30E984991CE96472BA99.sdp
 
@@ -60,6 +61,8 @@ public class AActivity extends Activity implements OnClickListener {
 		playLayout = (MediaController) findViewById(R.id.play_layout);
 		playLayout.setMediaControllerListener(mMediaControllerListener);
 		playLayout.setTouchable(true);
+		playLayout.setDefaultControllVerticalSlide(true);
+		playLayout.setDefaultControllHorizontalSlide(true);
 
 		play = (Button) findViewById(R.id.bt_play);
 		pause = (Button) findViewById(R.id.bt_pause);
@@ -196,27 +199,26 @@ public class AActivity extends Activity implements OnClickListener {
 		public void onScaleComplete(boolean isExpandScaleRange, int lastMultiple, int multiple) {
 			Log.e(TAG," onScaleComplete " + " isExpandScaleRange: " + isExpandScaleRange + " lastMultiple: " + lastMultiple + "multiple: " + multiple);
 
+			int screenH = Utils.getScreenHeight(AActivity.this) ;
+			int screenW = Utils.getScreenWidth(AActivity.this) ;
 
-			switch (multiple){
-				case 1:
-					if(!isExpandScaleRange && lastMultiple == 2 ){
-						// 从两倍 缩小到一倍
+			int playH = Utils.dip2px(AActivity.this,500);
+//			int playH = 500;
+
+			Log.e(TAG," onScaleComplete " + " screenW: " + screenW + " playH: " + playH );
 
 
-						//int playH = Utils.dip2px(AActivity.this,R.dimen.playH);
-						int playH = 500;
+			//修改内部 view
+			View palyView = VideoPlayManager.getInstance().getVideoView();
+			FrameLayout.LayoutParams palyViewpls = (FrameLayout.LayoutParams) palyView.getLayoutParams();
+			palyViewpls.width = screenW * multiple;
+			palyViewpls.height = playH * multiple;
+			palyViewpls.leftMargin =  0;
+			palyViewpls.topMargin = 0;
+			palyViewpls.gravity = Gravity.CENTER;
+			palyView.setLayoutParams(palyViewpls);
 
-						View palyView = VideoPlayManager.getInstance().getVideoView();
-						FrameLayout.LayoutParams palyViewpls = (FrameLayout.LayoutParams) palyView.getLayoutParams();
-						palyViewpls.width = FrameLayout.LayoutParams.FILL_PARENT;
-						palyViewpls.height = playH;
-						palyViewpls.gravity = Gravity.CENTER;
-						palyView.setLayoutParams(palyViewpls);
-
-					}
-					break;
-			}
-
+			Log.e(TAG," onScaleComplete " + " palyViewpls.width: " + palyViewpls.width + " palyViewpls.height: " + palyViewpls.height );
 		}
 
 		@Override
@@ -239,37 +241,35 @@ public class AActivity extends Activity implements OnClickListener {
 			Log.e(TAG,"onDragViewWhenMultipleSize " + " multiple: " + multiple + " distanceX: " + distanceX + " distanceY: " + distanceY);
 
 
+			if (multiple > 1){
+				//修改内部 view
+				View palyView = VideoPlayManager.getInstance().getVideoView();
+				FrameLayout.LayoutParams palyViewpls = (FrameLayout.LayoutParams) palyView.getLayoutParams();
 
-			int screenH = Utils.getScreenHeight(AActivity.this) ;
-			int screenW = Utils.getScreenWidth(AActivity.this) ;
+//			palyViewpls.leftMargin = palyViewpls.leftMargin  + (int)distanceX;
+//			palyViewpls.topMargin = palyViewpls.topMargin +(int)distanceY;
 
-//			int playH = Utils.dip2px(AActivity.this,R.dimen.playH);
-			int playH = 300;
+				palyViewpls.leftMargin =  (int)distanceX;
+				palyViewpls.topMargin =  (int)distanceY;
+				palyView.setLayoutParams(palyViewpls);
 
-			int x = screenW / multiple   ;
-			int y = screenH / multiple   ;
-
-			int w = screenW * multiple  ;
-			int h = screenH * multiple  ;
-
-//			onScaleComplete  isExpandScaleRange: false lastMultiple: 2multiple: 1
-			//修改 外层layout
-//			RelativeLayout.LayoutParams lps = (RelativeLayout.LayoutParams) playLayout.getLayoutParams();
-//			lps.width = screenW * multiple;
-//			lps.height = playH * multiple;
-//
-//			Log.e(TAG,"LayoutParams width" + lps.width + " height " + lps.height );
-//			playLayout.setLayoutParams(lps);
+//				playLayout.updateViewLayout(palyView , palyViewpls);
 
 
 
-			//修改内部 view
-			View palyView = VideoPlayManager.getInstance().getVideoView();
-			FrameLayout.LayoutParams palyViewpls = (FrameLayout.LayoutParams) palyView.getLayoutParams();
-			palyViewpls.width = screenW * multiple;
-			palyViewpls.height = playH * multiple;
-			palyViewpls.gravity = Gravity.CENTER;
-			palyView.setLayoutParams(palyViewpls);
+//				palyView.scrollBy((int)-distanceX,(int)-distanceY);
+			}
+
+
+//			float x = distanceX;
+//			float y = distanceY;
+//			VideoPlayManager.getInstance().setTextureXYAndTimes((int)x, (int)y, 0, 0, multiple);
+
+//			if (!isScreenHorizontal())
+//				getVideoView().setTextureXYAndTimes(((mScaleX - viewWidth) / 2 - targetLeftMargin) / multiple, ((mScaleY - viewHeight) / 2 - targetTopMargin) / multiple, mScaleX, mScaleY, multiple);
+//			else
+//				getVideoView().setTextureXYAndTimes(((mScaleX - viewWidth) / 2 - targetLeftMargin) / multiple, ((mScaleY - viewHeight) / 2 - targetTopMargin) / multiple, mScaleX, mScaleY, multiple);
+
 
 
 

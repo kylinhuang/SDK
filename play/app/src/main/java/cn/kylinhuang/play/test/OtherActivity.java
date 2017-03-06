@@ -22,7 +22,7 @@ public class OtherActivity extends Activity implements OnClickListener {
 	private Button pause;
 	private Button stop;
 	private FrameLayout playLayout;
-	String mVideoUrl ="rtsps://101.68.222.221:1554/27B529C1DDBE30E984991CE96472BA99.sdp";
+	String mVideoUrl ="rtsps://101.68.222.221:1554/7136C7D76F5EE09DD1DA564D02EA56F9.sdp";
 
 
 
