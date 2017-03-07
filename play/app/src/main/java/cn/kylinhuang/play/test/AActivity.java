@@ -276,4 +276,5 @@ public class AActivity extends Activity implements OnClickListener {
 
 		}
 	};
+
 }

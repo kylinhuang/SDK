@@ -22,6 +22,8 @@
 
         <activity android:name="cn.kylinhuang.play.test.AActivity" />
         <activity android:name="cn.kylinhuang.play.test.OtherActivity" />
+
+        <activity android:name="cn.kylinhuang.play.test.TounchActivity" />
     </application>
 
 </manifest>

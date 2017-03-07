@@ -14,6 +14,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewById(R.id.bt_testLivePlay).setOnClickListener(this);
+        findViewById(R.id.bt_testTounch).setOnClickListener(this);
+
     }
 
     @Override
@@ -22,6 +24,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
             case R.id.bt_testLivePlay:
                 //TODO 播放器器bug   当 addView 自动开启播放
                 AActivity.actionStart(MainActivity.this);
+                break;
+            case R.id.bt_testTounch:
+                TounchActivity.actionStart(MainActivity.this);
                 break;
 
         }
